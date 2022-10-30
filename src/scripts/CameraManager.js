@@ -6,9 +6,12 @@ import CamController from "@js/cameras/CamController";
 import OrbitCam from "@js/cameras/OrbitCam";
 import RadialCam from "@js/cameras/RadialCam";
 import CubeCam from "@js/cameras/CubeCam";
+import AudioManager from "@js/AudioManager";
 
 let instance = null;
-
+const START_CAMERA = "radialCam";
+const SWITCH_DURATION = 200;
+const AUTOSWITCH_DELAY = AudioManager.barLength * 2 - SWITCH_DURATION; //BASED ON BPM
 class CameraManager {
   constructor(canvas = null) {
     //Singleton
@@ -17,12 +20,24 @@ class CameraManager {
 
     this.canvas = canvas;
     this.camera = null;
+    this.cameraIndex = null;
+    this.autoSwitchId = null;
+
+    this.params = {
+      autoSwitchEnabled: true,
+    };
+
     this.init();
+    Emitter.on(
+      "startAudio",
+      () => this.params.autoSwitchEnabled && this.enableAutoSwitch()
+    );
   }
 
   init() {
     this.setupCamera();
     this.setupCamDebug();
+    // if (this.params.autoSwitchEnabled) this.enableAutoSwitch();
   }
 
   setupCamera() {
@@ -33,7 +48,7 @@ class CameraManager {
     this.cameras.cubeCam = new CubeCam();
 
     this.camController = new CamController(Scene);
-    this.camController.setCam(this.cameras.orbitCam);
+    this.camController.setCam(this.cameras[START_CAMERA]);
     this.camera = this.camController.mainCameraObject;
   }
 
@@ -44,29 +59,52 @@ class CameraManager {
       .addButton({
         title: "Orbit Camera",
       })
-      .on("click", () => this.camSwitch(this.cameras.orbitCam));
+      .on("click", () => this.switchCam(this.cameras.orbitCam));
 
     camDebug
       .addButton({
         title: "Radial Camera",
       })
-      .on("click", () => this.camSwitch(this.cameras.radialCam));
+      .on("click", () => this.switchCam(this.cameras.radialCam));
 
     camDebug
       .addButton({
         title: "Cube Camera",
       })
-      .on("click", () => this.camSwitch(this.cameras.cubeCam));
+      .on("click", () => this.switchCam(this.cameras.cubeCam));
+
+    camDebug
+      .addInput(this.params, "autoSwitchEnabled", {
+        label: "Enable Auto Switch",
+      })
+      .on("change", (ev) => {
+        ev.value ? this.enableAutoSwitch() : clearInterval(this.autoSwitchId);
+      });
   }
 
-  camSwitch(camInstance) {
+  switchCam(camInstance) {
     Emitter.emit("hideCamera");
     setTimeout(() => {
       this.camController.setCam(camInstance);
       this.camera = this.camController.mainCameraObject;
-      // Emitter.emit("camSwitch", this.camera);
+      // Emitter.emit("switchCam", this.camera);
       Emitter.emit("showCamera");
-    }, 500);
+    }, SWITCH_DURATION);
+  }
+
+  enableAutoSwitch() {
+    const camerasKey = [];
+    for (const cam in this.cameras) {
+      camerasKey.push(cam);
+    }
+    console.log(camerasKey);
+    this.cameraIndex = camerasKey.indexOf(START_CAMERA);
+    this.autoSwitchId = setInterval(() => {
+      const newCamIndex = (this.cameraIndex + 1) % camerasKey.length;
+      const newCamKey = camerasKey[newCamIndex];
+      this.switchCam(this.cameras[newCamKey]);
+      this.cameraIndex = newCamIndex;
+    }, AUTOSWITCH_DELAY);
   }
 }
 

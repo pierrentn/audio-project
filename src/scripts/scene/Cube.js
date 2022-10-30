@@ -48,6 +48,8 @@ class Cube {
       },
     });
     this.cube = new Mesh(this.geometry, this.material);
+    this.cube.name = "MainCube";
+    this.cube.material.userData.needsUpdatedReflections = true;
     this.cube.position.set(0, 5.5, 0);
     this.scene.add(this.cube);
 
@@ -66,6 +68,9 @@ class Cube {
       transparent: true,
     });
     const transparentCube = new Mesh(transparentGeo, transparentMat);
+    transparentCube.name = "TransparentCube";
+
+    transparentCube.material.userData.needsUpdatedReflections = true;
     transparentCube.position.set(0, 6.5, 0);
     this.scene.add(transparentCube);
   }

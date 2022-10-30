@@ -39,7 +39,7 @@ class TransitionCamera {
     this.material.uniforms.uAlpha.value = lerp(
       this.material.uniforms.uAlpha.value,
       this.isCameraHidden ? 1 : 0,
-      0.2
+      0.3
     );
   }
 }

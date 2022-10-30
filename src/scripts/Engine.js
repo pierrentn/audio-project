@@ -67,10 +67,9 @@ class Engine {
         jitter: 0.98,
         jitterRoughness: 3.51,
         roughnessFade: 1,
-        fade: 1.03,
+        fade: 4.7,
         thickness: 3.5,
         ior: 1.75,
-        fade: 0,
         steps: 5,
         refineSteps: 6,
         maxDepthDifference: 50,
@@ -82,7 +81,7 @@ class Engine {
         mipmapBlur: true,
         luminanceThreshold: 0.4,
         luminanceSmoothing: 0.3,
-        intensity: 2.0,
+        intensity: 5.0,
       },
     };
 
@@ -91,6 +90,12 @@ class Engine {
     this.effect = {};
 
     this.effect.ssr = new SSREffect(Scene, this.camera);
+
+    const ssrSelection = new POSTPROCESSING.Selection([
+      Scene.children[1],
+      Scene.children[2],
+    ]);
+    this.effect.ssr.selection = ssrSelection;
 
     this.effect.bloom = new POSTPROCESSING.SelectiveBloomEffect(
       Scene,

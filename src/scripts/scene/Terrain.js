@@ -64,6 +64,7 @@ class Terrain {
     // this.setStandardMat();
 
     this.terrain = new Mesh(this.geometry, this.material);
+    this.terrain.material.userData.needsUpdatedReflections = true;
     this.terrain.position.set(0, 0, 0);
     this.terrain.rotation.x = -Math.PI / 2;
 
@@ -257,7 +258,7 @@ class Terrain {
   }
 
   update(elapsed) {
-    this.material.uniforms.uTime.value = elapsed;
+    this.material.uniforms.uTime.value = elapsed * 0.6;
     if (!AudioManager.dropPlayed) {
       this.terrainSettings.uBassFreq = lerp(
         this.terrainSettings.uBassFreq,

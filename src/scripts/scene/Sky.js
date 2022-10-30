@@ -44,6 +44,7 @@ class Sky {
       transparent: true,
     });
     this.sky = new Mesh(this.geometry, this.material);
+    this.sky.material.userData.needsUpdatedReflections = true;
     this.scene.add(this.sky);
   }
 
