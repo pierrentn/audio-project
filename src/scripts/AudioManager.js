@@ -1,5 +1,6 @@
 import Audio from "./utils/audio.js";
 import Emitter from "./utils/Emitter.js";
+import Ressources from "./utils/Ressources.js";
 
 class AudioManager {
   constructor() {
@@ -10,11 +11,11 @@ class AudioManager {
     this.volume = 0;
     Emitter.on("startAudio", () => this.startAudio());
     Emitter.on("tick", (elapsed) => this.update(elapsed));
+    Emitter.on("showSoundDebug", () => this.toggleDebug());
   }
 
   startAudio() {
     this.audio = new Audio();
-
     this.audio.start({
       // src: "audio/Allegri.flac",
       src: "audio/brest.mp3",
@@ -40,6 +41,11 @@ class AudioManager {
         Emitter.emit("musicDrop");
       }
     }
+  }
+
+  toggleDebug() {
+    if (!this.audioStarted) return;
+    document.querySelector("#audio-canvas").classList.toggle("hidden");
   }
 }
 

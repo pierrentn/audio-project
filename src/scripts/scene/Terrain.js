@@ -9,13 +9,13 @@ import {
   MeshMatcapMaterial,
   RepeatWrapping,
 } from "three";
-import Debug from "./utils/Debug";
-import Ressources from "./utils/Ressources";
-import terrainVert from "./shaders/terrain.vert";
-import terrainFrag from "./shaders/terrain.frag";
-import Emitter from "./utils/Emitter";
+import Debug from "@js/utils/Debug";
+import Ressources from "@js/utils/Ressources";
+import terrainVert from "@glsl/terrain.vert";
+import terrainFrag from "@glsl/terrain.frag";
+import Emitter from "@js/utils/Emitter";
 import { lerp } from "three/src/math/MathUtils";
-import AudioManager from "./AudioManager";
+import AudioManager from "@js/AudioManager";
 
 class Terrain {
   constructor(scene) {
@@ -220,11 +220,15 @@ class Terrain {
   }
 
   setupGui() {
-    const debug = Debug.gui.addFolder({ title: "Terrain" });
-    debug
+    const gui = Debug.tabs.pages[1].addFolder({
+      title: "Terrain",
+      expanded: false,
+    });
+
+    gui
       .addInput(this.terrainSettings, "showWireframe")
       .on("change", (e) => (this.material.wireframe = e.value));
-    debug
+    gui
       .addInput(this.terrainSettings, "uNFrequency", {
         min: 0.001,
         max: 0.5,
@@ -234,7 +238,7 @@ class Terrain {
         "change",
         (e) => (this.material.uniforms.uNFrequency.value = e.value)
       );
-    debug
+    gui
       .addInput(this.terrainSettings, "uNAmplitude", {
         min: 0.0,
         max: 50,
@@ -244,10 +248,10 @@ class Terrain {
         "change",
         (e) => (this.material.uniforms.uNAmplitude.value = e.value)
       );
-    debug.addInput(this.terrainSettings, "uColor1", {
+    gui.addInput(this.terrainSettings, "uColor1", {
       color: { type: "float" },
     });
-    debug.addInput(this.terrainSettings, "uColor2", {
+    gui.addInput(this.terrainSettings, "uColor2", {
       color: { type: "float" },
     });
   }
@@ -266,7 +270,6 @@ class Terrain {
       this.terrainSettings.uBeat = nuBeat;
       this.material.uniforms.uBeat.value = nuBeat;
     }
-
     this.terrainSettings.uHightFreq = lerp(
       this.terrainSettings.uHightFreq,
       AudioManager.values[3],

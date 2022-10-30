@@ -1,8 +1,8 @@
 import { DoubleSide, Mesh, ShaderMaterial, SphereGeometry } from "three";
-import skyVert from "./shaders/sky.vert";
-import skyFrag from "./shaders/sky.frag";
-import Emitter from "./utils/Emitter";
-import AudioManager from "./AudioManager";
+import skyVert from "@glsl/sky.vert";
+import skyFrag from "@glsl/sky.frag";
+import Emitter from "@js/utils/Emitter";
+import AudioManager from "@js/AudioManager";
 import { lerp } from "three/src/math/MathUtils";
 
 class Sky {

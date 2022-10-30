@@ -1,9 +1,8 @@
-import Emitter from "./Emitter";
-
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
-import Sources from "./manifest";
+import Sources from "@js/utils/manifest";
+import Emitter from "@js/utils/Emitter";
 
 let instance;
 
@@ -64,7 +63,7 @@ class Ressources {
           this.sourceLoaded(source, meshes);
         });
       } else if (source.type === "audio") {
-        this.loaders.audioLoader.load(`/sounds/${source.path}.mp3`, (file) => {
+        this.loaders.audioLoader.load(source.path, (file) => {
           this.sourceLoaded(source, file);
         });
       }

@@ -1,10 +1,10 @@
 import { BoxGeometry, Mesh, ShaderMaterial } from "three";
-import Emitter from "./utils/Emitter";
-import cubeVert from "./shaders/cube.vert";
-import cubeFrag from "./shaders/cube.frag";
-import Ressources from "./utils/Ressources";
-import Debug from "./utils/Debug";
-import AudioManager from "./AudioManager";
+import cubeVert from "@glsl/cube.vert";
+import cubeFrag from "@glsl/cube.frag";
+import Emitter from "@js/utils/Emitter";
+import Ressources from "@js/utils/Ressources";
+import Debug from "@js/utils/Debug";
+import AudioManager from "@js/AudioManager";
 import { lerp } from "three/src/math/MathUtils";
 
 class Cube {
@@ -13,7 +13,7 @@ class Cube {
 
     this.cubeSettings = {
       uTime: 0,
-      uGradient: Ressources.items["gradient"],
+      // uGradient: Ressources.items["gradient"],
       uColor1: { r: 0.22, g: 0.91, b: 0.96 },
       uColor2: { r: 0.82, g: 0.0, b: 0.39 },
       uColor3: { r: 0.04, g: 0.11, b: 0.84 },
@@ -38,7 +38,7 @@ class Cube {
       fragmentShader: cubeFrag,
       uniforms: {
         uTime: { value: this.cubeSettings.uTime },
-        uGradient: { value: this.cubeSettings.uGradient },
+        // // uGradient: { value: this.cubeSettings.uGradient },
         uColor1: { value: this.cubeSettings.uColor1 },
         uColor2: { value: this.cubeSettings.uColor2 },
         uColor3: { value: this.cubeSettings.uColor3 },
@@ -71,17 +71,20 @@ class Cube {
   }
 
   setDebug() {
-    const debug = Debug.gui.addFolder({ title: "Cube" });
-    debug.addInput(this.cubeSettings, "uColor1", {
+    const gui = Debug.tabs.pages[1].addFolder({
+      title: "Cube",
+      expanded: false,
+    });
+    gui.addInput(this.cubeSettings, "uColor1", {
       color: { type: "float" },
     });
-    debug.addInput(this.cubeSettings, "uColor2", {
+    gui.addInput(this.cubeSettings, "uColor2", {
       color: { type: "float" },
     });
-    debug.addInput(this.cubeSettings, "uColor3", {
+    gui.addInput(this.cubeSettings, "uColor3", {
       color: { type: "float" },
     });
-    debug.addInput(this.cubeSettings, "uColor4", {
+    gui.addInput(this.cubeSettings, "uColor4", {
       color: { type: "float" },
     });
   }

@@ -33,9 +33,6 @@ void main() {
   grid = clamp(grid, 0., 1.);
   uvGrid -= (1. - grid);
 
-  float n1 = noise(vec3(vUv * 5., uTime * .25));
-  vec2 uv = vec2(vUv.x * 1., vUv.y * 1.);
-  float n2 = snoise2D((vec2(n1) + sin(uTime)));
 
   float waves = 0.;
   float uvWaveSinFreq = .5;
@@ -56,21 +53,9 @@ void main() {
     // newWave -= step(sin(uvWaves.x), 0.01  + 0.05 * (float(i) + offsetTime * .5));
     waves += newWave;
   }
-  // waves = sin(snoise2D(waves * uv * uTime));
-  // waves = sin(snoise2D(vecwaves * uTime));
-
-  vec3 gradientTexture = texture2D(uGradient, vUv).rgb;
-
-  // vec3 c = (n2 * vec3( 1.) * 2.);
-  // c = mix(c, abs(n1 / n2) * vec3(1.), step(0.1, waves));
-
-  vec3 c = (vec3(n1 / n2) * gradientTexture) * waves; 
-
-  c *= grid;
 
   float gridColorNoise = clamp(snoise2D(vUv * .5 + uTime * .2), 0., 1.) * 1.5;
   vec2 gridColorOff = vec2(smoothstep(0.8, 1., uvGrid.x), smoothstep(0.8, 1., uvGrid.y));
-  c += (gridColorOff.x + gridColorOff.y) * vec3(1.);
 
   float fnoise1 = getFbm(vUv, 1. * uBassFreq);
   float fnoise2 = getFbm(uvWaves, 1. * pow(uHightFreq, 2.));

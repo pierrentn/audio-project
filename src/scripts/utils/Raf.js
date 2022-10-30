@@ -1,5 +1,5 @@
 import { Clock } from "three";
-import Emitter from "./Emitter";
+import Emitter from "@js/utils/Emitter";
 
 class Raf {
   constructor() {
@@ -16,4 +16,4 @@ class Raf {
   }
 }
 
-export default Raf;
+export default new Raf();

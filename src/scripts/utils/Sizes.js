@@ -1,4 +1,4 @@
-import Emitter from "./Emitter";
+import Emitter from "@js/utils/Emitter";
 
 class Sizes {
   constructor() {

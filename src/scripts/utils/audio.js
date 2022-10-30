@@ -146,7 +146,8 @@ class Audio {
 
     if (this.showPreview) {
       this.canvas = document.createElement("canvas");
-      this.canvas.style.display = "none";
+      this.canvas.setAttribute("id", "audio-canvas");
+      this.canvas.classList.add("hidden");
       this.canvas.width =
         this.audioRange * W_BAR +
         (this.audioRange - 1) * SPACE_BAR +

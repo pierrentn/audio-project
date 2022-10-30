@@ -8,3 +8,11 @@
   top: 50%;
   z-index: 1000;
 }
+
+#audio-canvas.hidden {
+  display: none;
+}
+
+#webgl-canvas {
+  position: fixed;
+}

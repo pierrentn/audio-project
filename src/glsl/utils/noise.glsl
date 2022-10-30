@@ -1,4 +1,4 @@
-#define NUM_OCTAVES 10
+#define NUM_OCTAVES 8
 
 // Simplex 2D noise
 //

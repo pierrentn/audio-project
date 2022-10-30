@@ -1,4 +1,4 @@
 import "./style.css";
-import Experience from "./Experience";
+import Experience from "@js/Experience";
 
 const experience = new Experience();
