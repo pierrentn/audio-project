@@ -10,7 +10,7 @@ import AudioManager from "@js/AudioManager";
 
 let instance = null;
 const START_CAMERA = "radialCam";
-const SWITCH_DURATION = 200;
+const SWITCH_DURATION = 800;
 const AUTOSWITCH_DELAY = AudioManager.barLength * 2 - SWITCH_DURATION; //BASED ON BPM
 class CameraManager {
   constructor(canvas = null) {
@@ -84,12 +84,16 @@ class CameraManager {
 
   switchCam(camInstance) {
     Emitter.emit("hideCamera");
-    setTimeout(() => {
-      this.camController.setCam(camInstance);
-      this.camera = this.camController.mainCameraObject;
-      // Emitter.emit("switchCam", this.camera);
-      Emitter.emit("showCamera");
-    }, SWITCH_DURATION);
+    Emitter.on("cameraHidden", () => {
+      setTimeout(() => {
+        this.camController.setCam(camInstance);
+        this.camera = this.camController.mainCameraObject;
+        // Emitter.emit("switchCam", this.camera);
+        Emitter.emit("showCamera");
+      }, 100);
+    });
+    // setTimeout(() => {
+    // }, SWITCH_DURATION);
   }
 
   enableAutoSwitch() {

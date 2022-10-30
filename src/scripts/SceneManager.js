@@ -14,6 +14,7 @@ class SceneManager extends Scene {
     this.terrain = new Terrain(this);
     this.cube = new Cube(this);
     this.sky = new Sky(this);
+    //TODO: Replace with custom post-pro effect
     this.transitionCamera = new TransitionCamera(this);
   }
 }

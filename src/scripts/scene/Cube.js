@@ -56,13 +56,23 @@ class Cube {
     const transparentGeo = new BoxGeometry(4.5, 12, 4.5);
     const transparentMat = new ShaderMaterial({
       vertexShader: `
+        varying vec2 vUv;
         void main() {
+          vUv = uv;
           gl_Position  = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
         }
       `,
       fragmentShader: `
+        varying vec2 vUv;
         void main() {
-          gl_FragColor = vec4(.0);
+          float edgeWidth = 0.01;
+          float edge = step(vUv.x, edgeWidth) + (1. - step(vUv.x, 1. - edgeWidth));
+          edge += step(vUv.y, edgeWidth) + (1. - step(vUv.y, 1. - edgeWidth));
+
+          edge = clamp(edge, 0., 1.);
+          // edge = step(1. - edge, 0.01);
+          vec4 color = vec4(edge);
+          gl_FragColor = vec4(edge);
         }
       `,
       transparent: true,
@@ -70,7 +80,6 @@ class Cube {
     const transparentCube = new Mesh(transparentGeo, transparentMat);
     transparentCube.name = "TransparentCube";
 
-    transparentCube.material.userData.needsUpdatedReflections = true;
     transparentCube.position.set(0, 6.5, 0);
     this.scene.add(transparentCube);
   }

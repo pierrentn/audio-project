@@ -4,8 +4,8 @@ import Ressources from "./utils/Ressources.js";
 
 const DROP_TIME = 96.2;
 const BAR_LENGTH = 2996;
-// const START_TIME = (BAR_LENGTH * 35) / 1000;
-const START_TIME = (BAR_LENGTH * 10) / 1000;
+const START_TIME = (BAR_LENGTH * 30) / 1000;
+// const START_TIME = (BAR_LENGTH * 10) / 1000;
 // const START_TIME = 95;
 console.log(START_TIME);
 

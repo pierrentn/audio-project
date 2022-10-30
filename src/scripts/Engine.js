@@ -6,48 +6,14 @@ import Sizes from "@js/utils/Sizes";
 import Debug from "@js/utils/Debug";
 import Emitter from "@js/utils/Emitter";
 import Scene from "@js/SceneManager";
-import CameraManager from "./CameraManager";
+import CameraManager from "@js/CameraManager";
+import AudioManager from "./AudioManager";
 
 class Engine {
   constructor(canvas) {
     this.canvas = canvas;
     this.camera = new CameraManager().camera;
 
-    this.init();
-
-    Emitter.on("tick", (e) => this.update(e));
-    Emitter.on("resize", () => this.onResize());
-    Emitter.on("showCamera", () => this.onCamSwitch());
-  }
-
-  init() {
-    this.setupCanvas();
-    this.setupRenderer();
-    this.setupPostProcessing();
-  }
-
-  setupCanvas() {
-    this.canvas.style.width = Sizes.width;
-    this.canvas.style.height = Sizes.height;
-    this.canvas.width = Sizes.width * Sizes.dpr;
-    this.canvas.height = Sizes.height * Sizes.dpr;
-  }
-
-  setupRenderer() {
-    this.renderer = new WebGLRenderer({
-      canvas: this.canvas,
-      powerPreference: "high-performance",
-      premultipliedAlpha: false,
-      depth: false,
-      stencil: false,
-      antialias: false,
-      preserveDrawingBuffer: true,
-    });
-    this.renderer.setSize(Sizes.width, Sizes.height);
-    this.renderer.setPixelRatio(Sizes.dpr);
-  }
-
-  setupPostProcessing() {
     this.postParams = {
       ssrOpt: {
         ...defaultSSROptions,
@@ -81,10 +47,46 @@ class Engine {
         mipmapBlur: true,
         luminanceThreshold: 0.4,
         luminanceSmoothing: 0.3,
-        intensity: 5.0,
+        intensity: 0.7,
       },
     };
 
+    this.init();
+
+    Emitter.on("tick", (e) => this.update(e));
+    Emitter.on("resize", () => this.onResize());
+    Emitter.on("cameraHidden", () => this.onCameraHidden());
+    Emitter.on("showCamera", () => this.onCamSwitch());
+  }
+
+  init() {
+    this.setupCanvas();
+    this.setupRenderer();
+    this.setupPostProcessing();
+  }
+
+  setupCanvas() {
+    this.canvas.style.width = Sizes.width;
+    this.canvas.style.height = Sizes.height;
+    this.canvas.width = Sizes.width * Sizes.dpr;
+    this.canvas.height = Sizes.height * Sizes.dpr;
+  }
+
+  setupRenderer() {
+    this.renderer = new WebGLRenderer({
+      canvas: this.canvas,
+      powerPreference: "high-performance",
+      premultipliedAlpha: false,
+      depth: false,
+      stencil: false,
+      antialias: false,
+      preserveDrawingBuffer: true,
+    });
+    this.renderer.setSize(Sizes.width, Sizes.height);
+    this.renderer.setPixelRatio(Sizes.dpr);
+  }
+
+  setupPostProcessing() {
     this.composer = new POSTPROCESSING.EffectComposer(this.renderer);
 
     this.effect = {};
@@ -92,9 +94,12 @@ class Engine {
     this.effect.ssr = new SSREffect(Scene, this.camera);
 
     const ssrSelection = new POSTPROCESSING.Selection([
+      Scene.children[0],
       Scene.children[1],
       Scene.children[2],
+      Scene.children[3],
     ]);
+    console.log(Scene.children);
     this.effect.ssr.selection = ssrSelection;
 
     this.effect.bloom = new POSTPROCESSING.SelectiveBloomEffect(
@@ -111,6 +116,10 @@ class Engine {
     this.effect.bloom.inverted = true;
 
     this.passes = {};
+    // this.passes.cameraTransition = new POSTPROCESSING.MaskPass(
+    //   Scene,
+    //   this.camera
+    // );
 
     this.passes.render = new POSTPROCESSING.RenderPass(Scene, this.camera);
 
@@ -135,6 +144,10 @@ class Engine {
     // );
   }
 
+  onCameraHidden() {
+    this.composer.removeAllPasses();
+  }
+
   onCamSwitch() {
     this.camera = new CameraManager().camera;
     this.setupPostProcessing();
@@ -147,6 +160,9 @@ class Engine {
 
   update(e) {
     const elapsed = e;
+
+    // this.effect.bloom.intensity =
+    //   this.postParams.bloomOpt.intensity + AudioManager.values[0];
     this.composer.render();
     // this.renderer.render(Scene, this.camera);
     Debug.stats.update();

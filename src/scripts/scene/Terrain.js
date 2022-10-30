@@ -59,11 +59,12 @@ class Terrain {
         uColor2: { value: this.terrainSettings.uColor2 },
         uHightFreq: { value: this.terrainSettings.uHightFreq },
       },
-      transparent: true,
+      // transparent: true,
     });
     // this.setStandardMat();
 
     this.terrain = new Mesh(this.geometry, this.material);
+    this.terrain.name = "Terrain";
     this.terrain.material.userData.needsUpdatedReflections = true;
     this.terrain.position.set(0, 0, 0);
     this.terrain.rotation.x = -Math.PI / 2;

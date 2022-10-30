@@ -28,7 +28,7 @@ class Sky {
   }
 
   setupsky() {
-    this.geometry = new SphereGeometry(45, 45, 45);
+    this.geometry = new SphereGeometry(60, 60, 60);
     this.material = new ShaderMaterial({
       side: DoubleSide,
       vertexShader: skyVert,
@@ -44,6 +44,7 @@ class Sky {
       transparent: true,
     });
     this.sky = new Mesh(this.geometry, this.material);
+    this.sky.name = "Sky";
     this.sky.material.userData.needsUpdatedReflections = true;
     this.scene.add(this.sky);
   }
