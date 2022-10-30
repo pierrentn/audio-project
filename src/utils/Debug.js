@@ -1,4 +1,5 @@
 import { Pane } from "tweakpane";
+import Stats from "stats.js";
 
 class Debug {
   constructor() {
@@ -6,6 +7,8 @@ class Debug {
       expanded: true,
       title: "Settings",
     });
+    this.stats = new Stats();
+    // document.body.appendChild(this.stats.dom);
   }
 }
 

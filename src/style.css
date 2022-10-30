@@ -3,3 +3,8 @@
   padding: 0;
   box-sizing: border-box;
 }
+#startBtn {
+  position: fixed;
+  top: 50%;
+  z-index: 1000;
+}

@@ -19,4 +19,9 @@ export default [
     type: "texture",
     path: "/rock/Rock_AmbientOcclusion.jpg",
   },
+  {
+    name: "gradient",
+    type: "texture",
+    path: "/gradient.png",
+  },
 ];

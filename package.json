@@ -13,7 +13,11 @@
     "vite-plugin-glsl": "^0.5.3"
   },
   "dependencies": {
+    "gsap": "^3.11.3",
     "mitt": "^3.0.0",
+    "postprocessing": "^6.29.0",
+    "screen-space-reflections": "^2.5.0",
+    "stats.js": "^0.17.0",
     "three": "^0.145.0",
     "tweakpane": "^3.1.0"
   }

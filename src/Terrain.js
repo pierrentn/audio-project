@@ -14,6 +14,8 @@ import Ressources from "./utils/Ressources";
 import terrainVert from "./shaders/terrain.vert";
 import terrainFrag from "./shaders/terrain.frag";
 import Emitter from "./utils/Emitter";
+import { lerp } from "three/src/math/MathUtils";
+import AudioManager from "./AudioManager";
 
 class Terrain {
   constructor(scene) {
@@ -21,13 +23,19 @@ class Terrain {
 
     this.terrainSettings = {
       showWireframe: true,
-      uNFrequency: 0.1,
+      uNFrequency: 0.124,
       uNAmplitude: 20,
       uTime: 0,
+      uBeat: 0,
+      uBassFreq: 0,
+      uHightFreq: 0,
+      uColor1: { r: 0.01, g: 0.21, b: 1.0 },
+      uColor2: { r: 0.18, g: 0.66, b: 0.52 },
     };
     this.init();
 
     Emitter.on("tick", (e) => this.update(e));
+    Emitter.on("beat", (e) => (this.terrainSettings.uBeat = 1.5));
   }
 
   init() {
@@ -37,7 +45,7 @@ class Terrain {
 
   setupTerrain() {
     //Terrain
-    this.geometry = new PlaneGeometry(100, 100, 512, 512);
+    this.geometry = new PlaneGeometry(80, 80, 512, 512);
     this.material = new ShaderMaterial({
       vertexShader: terrainVert,
       fragmentShader: terrainFrag,
@@ -46,7 +54,12 @@ class Terrain {
         uNFrequency: { value: this.terrainSettings.uNFrequency },
         uNAmplitude: { value: this.terrainSettings.uNAmplitude },
         uTime: { value: 0 },
+        uBeat: { value: this.terrainSettings.uBeat },
+        uColor1: { value: this.terrainSettings.uColor1 },
+        uColor2: { value: this.terrainSettings.uColor2 },
+        uHightFreq: { value: this.terrainSettings.uHightFreq },
       },
+      transparent: true,
     });
     // this.setStandardMat();
 
@@ -231,10 +244,35 @@ class Terrain {
         "change",
         (e) => (this.material.uniforms.uNAmplitude.value = e.value)
       );
+    debug.addInput(this.terrainSettings, "uColor1", {
+      color: { type: "float" },
+    });
+    debug.addInput(this.terrainSettings, "uColor2", {
+      color: { type: "float" },
+    });
   }
 
   update(elapsed) {
     this.material.uniforms.uTime.value = elapsed;
+    if (!AudioManager.dropPlayed) {
+      this.terrainSettings.uBassFreq = lerp(
+        this.terrainSettings.uBassFreq,
+        AudioManager.values[1],
+        0.01
+      );
+      this.material.uniforms.uBeat.value = this.terrainSettings.uBassFreq;
+    } else {
+      const nuBeat = lerp(this.terrainSettings.uBeat, 0, 0.1);
+      this.terrainSettings.uBeat = nuBeat;
+      this.material.uniforms.uBeat.value = nuBeat;
+    }
+
+    this.terrainSettings.uHightFreq = lerp(
+      this.terrainSettings.uHightFreq,
+      AudioManager.values[3],
+      0.1
+    );
+    this.material.uniforms.uHightFreq.value = this.terrainSettings.uHightFreq;
   }
 }
 
