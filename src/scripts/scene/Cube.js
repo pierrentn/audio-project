@@ -53,7 +53,7 @@ class Cube {
     this.cube.position.set(0, 5.5, 0);
     this.scene.add(this.cube);
 
-    const transparentGeo = new BoxGeometry(4.5, 12, 4.5);
+    const transparentGeo = new BoxGeometry(4.5, 11, 4.5);
     const transparentMat = new ShaderMaterial({
       vertexShader: `
         varying vec2 vUv;
@@ -80,7 +80,7 @@ class Cube {
     const transparentCube = new Mesh(transparentGeo, transparentMat);
     transparentCube.name = "TransparentCube";
 
-    transparentCube.position.set(0, 6.5, 0);
+    transparentCube.position.set(0, 5.5, 0);
     this.scene.add(transparentCube);
   }
 

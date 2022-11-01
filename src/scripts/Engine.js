@@ -45,7 +45,7 @@ class Engine {
         blendFunction: POSTPROCESSING.BlendFunction.ADD,
         blendFunctionNoise: POSTPROCESSING.BlendFunction.COLOR_BURN, // substract // MULTIPLY // Overlay
         mipmapBlur: true,
-        luminanceThreshold: 0.4,
+        luminanceThreshold: 1,
         luminanceSmoothing: 0.3,
         intensity: 0.7,
       },
@@ -77,7 +77,7 @@ class Engine {
       canvas: this.canvas,
       powerPreference: "high-performance",
       premultipliedAlpha: false,
-      depth: false,
+      // depth: false,
       stencil: false,
       antialias: false,
       preserveDrawingBuffer: true,
@@ -88,7 +88,11 @@ class Engine {
 
   setupPostProcessing() {
     this.composer = new POSTPROCESSING.EffectComposer(this.renderer);
+    this.setPostEffects();
+    this.setPostPasses();
+  }
 
+  setPostEffects() {
     this.effect = {};
 
     this.effect.ssr = new SSREffect(Scene, this.camera);
@@ -114,7 +118,9 @@ class Engine {
       }
     );
     this.effect.bloom.inverted = true;
+  }
 
+  setPostPasses() {
     this.passes = {};
     // this.passes.cameraTransition = new POSTPROCESSING.MaskPass(
     //   Scene,
@@ -134,8 +140,8 @@ class Engine {
     );
 
     this.composer.addPass(this.passes.render);
-    this.composer.addPass(this.passes.ssr);
     this.composer.addPass(this.passes.bloom);
+    this.composer.addPass(this.passes.ssr);
 
     // this.ssrGui = new SSRDebugGUI(
     //   this.effect.ssr,
@@ -145,7 +151,7 @@ class Engine {
   }
 
   onCameraHidden() {
-    this.composer.removeAllPasses();
+    // this.composer.removeAllPasses();
   }
 
   onCamSwitch() {
@@ -154,14 +160,15 @@ class Engine {
   }
 
   onResize() {
-    this.renderer.setSize(Sizes.width, Sizes.height);
-    this.renderer.setPixelRatio(Sizes.dpr);
+    // this.renderer.setSize(Sizes.width, Sizes.height);
+    // this.renderer.setPixelRatio(Sizes.dpr);
+    this.composer.setSize(Sizes.width, Sizes.height);
   }
 
   update(e) {
     const elapsed = e;
 
-    // this.effect.bloom.intensity =
+    // this.effect?.bloom.intensity =
     //   this.postParams.bloomOpt.intensity + AudioManager.values[0];
     this.composer.render();
     // this.renderer.render(Scene, this.camera);

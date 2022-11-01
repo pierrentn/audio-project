@@ -4,8 +4,8 @@ import Ressources from "./utils/Ressources.js";
 
 const DROP_TIME = 96.2;
 const BAR_LENGTH = 2996;
-const START_TIME = (BAR_LENGTH * 30) / 1000;
-// const START_TIME = (BAR_LENGTH * 10) / 1000;
+// const START_TIME = (BAR_LENGTH * 30) / 1000;
+const START_TIME = (BAR_LENGTH * 10) / 1000;
 // const START_TIME = 95;
 console.log(START_TIME);
 
@@ -23,6 +23,7 @@ class AudioManager {
   }
 
   startAudio() {
+    this.audioStarted = true;
     this.audio = new Audio();
     this.audio.start({
       // src: "audio/Allegri.flac",
@@ -31,7 +32,6 @@ class AudioManager {
       onBeat: this.onBeat,
       startTime: START_TIME, //24
     });
-    this.audioStarted = true;
   }
 
   onBeat() {

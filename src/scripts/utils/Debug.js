@@ -1,6 +1,7 @@
 import { Pane } from "tweakpane";
 import Stats from "stats.js";
 import Emitter from "@js/utils/Emitter";
+import AudioManager from "../AudioManager";
 
 class Debug {
   constructor() {
@@ -22,7 +23,7 @@ class Debug {
 
     //Start Audio
     this.tabs.pages[0].addButton({ title: "start" }).on("click", () => {
-      Emitter.emit("startAudio");
+      !AudioManager.audioStarted && Emitter.emit("startAudio");
     });
 
     //Show Debug
